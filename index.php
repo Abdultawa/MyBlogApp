@@ -29,7 +29,7 @@ include("database.php");
                 <a href="index.php" class="p-4">Home</a>
                 <a href="#" class="p-4">About</a>
                 <a href="#" class="p-4">Blog</a>
-                <a href="#" class="p-4">Post</a>
+                <a href="admin.php" class="p-4">Post</a>
                 <a href="#" class="p-4">Comment</a>
             </nav>
         </div>

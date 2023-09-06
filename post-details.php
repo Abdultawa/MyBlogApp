@@ -23,15 +23,15 @@
                 <a href="index.php" class="p-4">Home</a>
                 <a href="#" class="p-4">About</a>
                 <a href="#" class="p-4">Blog</a>
-                <a href="#" class="p-4">Post</a>
+                <a href="admin.php" class="p-4">Post</a>
                 <a href="#" class="p-4">Comment</a>
             </nav>
         </div>
     </div>
 
     <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
     include("database.php");
     ?>
     <div class="md:flex flex-wrap justify-between m-16">
@@ -59,19 +59,49 @@
             echo "no post";
         }
         ?>
-        <?php
-        //     echo $postId;
-        //     die();
-        // 
-        ?>
     </div>
     <div class='float-right'>
-        <form action="comment.php" method="post" class="md: bottom-0 relative mt-56 ml-32">
+        <form action="" method="post" class="md: bottom-0 relative mt-56 ml-32">
             <input type="hidden" name="post_id" value='<?php echo $postId ?>'>
-            <textarea name="comment" id="" cols="70" placeholder="Make your comment here" rows="10" class="md:border-solid border-black outline-none border p-1 resize-none w-1/2"></textarea><br>
+            <textarea name="comment" id="" cols="70" placeholder="Make your comment here" rows="10" class="md:border-solid border-black outline-none border p-1 resize-none w-full"></textarea><br>
             <button type="submit" class="bg-black text-white rounded-3xl p-3">Submit</button>
         </form>
-    </div>
-</body>
+    <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // $name = $_POST["name"];
+    $post_id = $_POST['post_id'];
+    $comment = $_POST["comment"];
 
+
+    // Insert comment into the database
+    $sql = "INSERT INTO `comments` (`post_id`,`comment_text`) VALUES ('$post_id','$comment')";
+    if ($connection->query($sql) === TRUE) {
+        echo "Comment submitted successfully!";
+        //  header('Location: post-details.php');
+
+    } else {
+        echo "Error: " . $sql . "<br>" . $connection->error;
+    }
+
+    $connection->close();
+}
+?>
+    <?php
+$sql = "SELECT * FROM  `comments` WHERE `post_id` = $postId";
+$result = mysqli_query($connection, $sql);
+if ($result) {
+    while ($comment = mysqli_fetch_assoc($result)) {
+        echo '<div class="flex p-5">';
+        
+        // echo "<td>" . $comment['post_id'] . "</td>";
+        echo "<p>" . $comment['comment_text'] . "</p>";
+        echo '</div>';
+    }
+    mysqli_free_result($result);
+} else {
+    echo "Error executing query: " . mysqli_error($connection);
+}
+?>
+ </div>
+</body>
 </html>
